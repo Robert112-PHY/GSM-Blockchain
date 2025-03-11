@@ -559,6 +559,9 @@ var (
 	DefaultPragueBlobConfigBSC = DefaultCancunBlobConfig
 	// for bsc, only DefaultCancunBlobConfig is used, so we can define MaxBlobsPerBlockForBSC more directly
 	MaxBlobsPerBlockForBSC = DefaultCancunBlobConfig.Max
+
+const (
+    MinGasPrice = 100000 // 0.0001 GSM dalam wei
 )
 
 // NetworkNames are user friendly names to use in the chain spec banner.

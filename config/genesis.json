@@ -1,0 +1,27 @@
+config/genesis.json{
+  "config": {
+    "chainId": 112233,
+    "homesteadBlock": 0,
+    "eip150Block": 0,
+    "eip155Block": 0,
+    "eip158Block": 0,
+    "bnbChainConfig": {
+      "parlia": {
+        "period": 3,
+        "epoch": 200
+      }
+    }
+  },
+  "nonce": "0x0",
+  "timestamp": "0x0",
+  "extraData": "0xRobert112-PHY-GSM",
+  "gasLimit": "0x47e7c4",
+  "difficulty": "0x1",
+  "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "coinbase": "0xef506F9653071956dF77948088956208aED39570",
+  "alloc": {
+    "0xef506F9653071956dF77948088956208aED39570": {
+      "balance": "1000000000000000000000000000"
+    }
+  }
+}

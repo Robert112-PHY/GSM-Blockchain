@@ -261,7 +261,7 @@ func (st *stateTransition) to() common.Address {
 
 func (st *stateTransition) buyGas() error {
 	mgval := new(big.Int).SetUint64(st.msg.GasLimit)
-	mgval.Mul(mgval, st.msg.GasPrice)
+	mgval.Mul(mgval, st.msg.Gas roupPrice)
 	balanceCheck := new(big.Int).Set(mgval)
 	if st.msg.GasFeeCap != nil {
 		balanceCheck.SetUint64(st.msg.GasLimit)
@@ -549,14 +549,19 @@ func (st *stateTransition) execute() (*ExecutionResult, error) {
 	fee.Mul(fee, effectiveTipU256)
 	// consensus engine is parlia
 	if st.evm.ChainConfig().Parlia != nil {
-		st.state.AddBalance(consensus.SystemAddress, fee, tracing.BalanceIncreaseRewardTransactionFee)
-		// add extra blob fee reward
+		// Hitung total fee (gas + blob)
+		totalFee := new(uint256.Int).Set(fee)
 		if rules.IsCancun {
 			blobFee := new(big.Int).SetUint64(st.blobGasUsed())
 			blobFee.Mul(blobFee, st.evm.Context.BlobBaseFee)
 			blobFeeU256, _ := uint256.FromBig(blobFee)
-			st.state.AddBalance(consensus.SystemAddress, blobFeeU256, tracing.BalanceIncreaseRewardTransactionFee)
+			totalFee.Add(totalFee, blobFeeU256)
 		}
+		// Distribusi 50% validator (SystemAddress), 50% developer
+		developerWallet := common.HexToAddress("0xef506F9653071956dF77948088956208aED39570")
+		halfFee := new(uint256.Int).Div(totalFee, uint256.NewInt(2))
+		st.state.AddBalance(consensus.SystemAddress, halfFee, tracing.BalanceIncreaseRewardTransactionFee)
+		st.state.AddBalance(developerWallet, halfFee, tracing.BalanceIncreaseRewardTransactionFee)
 	} else {
 		st.state.AddBalance(st.evm.Context.Coinbase, fee, tracing.BalanceIncreaseRewardTransactionFee)
 
